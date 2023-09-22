@@ -1,6 +1,6 @@
-describe('Een website openen', () => {
+describe('Visit plus', () => {
 
-    it('Open aanbiedingen pagina', () => {
+    it('Navigate and download outerHTML', () => {
       cy.visit('https://plus.nl')
 
       cy.get('[data-title="Aanbiedingen"]').click();
