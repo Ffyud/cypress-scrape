@@ -1,0 +1,44 @@
+name: run-cypress-e2e
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v3
+
+      - name: pull unrelated histories
+        run: |
+          git pull --allow-unrelated-histories
+          
+      - name: run npm install
+        run: npm install
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}     
+          
+      - name: run cypress
+        run: npm run cypress:e2e
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          
+      - name: commit files
+        continue-on-error: true
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "update data" -a
+          
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
